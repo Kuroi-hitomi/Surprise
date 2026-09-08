@@ -194,6 +194,9 @@
   .photo-empty{font-size:13px;color:var(--p-text-dim);grid-column:1/-1;}
 
   .photo-lightbox{position:fixed;inset:0;z-index:10;background:rgba(18,15,46,.92);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+  /* 不允许 .photo-lightbox 的 display:flex 覆盖 HTML hidden 属性。
+     否则页面加载时空的 lightbox 会覆盖整屏，并显示 src="" 的裂图和 alt 文本“照片”。 */
+  .photo-lightbox[hidden]{display:none !important;}
   .photo-lightbox img{max-width:100%;max-height:100%;border-radius:8px;}
 
   @media (prefers-reduced-motion: reduce){
