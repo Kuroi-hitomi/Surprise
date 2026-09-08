@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>给你的小惊喜</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --night-deep:#120F2E;
+    --night-mid:#241B4D;
+    --night-glow:#3D2C6D;
+    --gold:#E8B76C;
+    --gold-soft:#F3D19C;
+    --blush:#E8927C;
+    --cream:#F7F0E4;
+    --cream-dim:rgba(247,240,228,0.68);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{min-height:100%;}
+  body{
+    background:linear-gradient(180deg,var(--night-deep) 0%,var(--night-mid) 55%,var(--night-glow) 100%);
+    background-attachment:fixed;
+    font-family:'Noto Serif SC',serif;
+    color:var(--cream);
+    line-height:1.6;
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  /* 星空背景 */
+  #sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .star{position:absolute;background:var(--cream);border-radius:50%;opacity:.5;animation:twinkle 3.6s ease-in-out infinite;}
+  @keyframes twinkle{0%,100%{opacity:.15;}50%{opacity:.9;}}
+  .firefly{position:absolute;bottom:-10px;width:5px;height:5px;border-radius:50%;background:var(--gold-soft);box-shadow:0 0 8px 2px var(--gold-soft);animation:drift linear infinite;}
+  @keyframes drift{
+    0%{transform:translateY(0) translateX(0);opacity:0;}
+    12%{opacity:.85;}
+    88%{opacity:.55;}
+    100%{transform:translateY(-105vh) translateX(24px);opacity:0;}
+  }
+
+  /* 开场：点一下拆开 */
+  #opener{
+    position:fixed;inset:0;z-index:2;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;
+    text-align:center;padding:24px;
+    transition:opacity .8s ease;
+  }
+  #opener::before{
+    content:'';position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+    width:320px;height:320px;border-radius:50%;
+    background:radial-gradient(circle, rgba(232,183,108,0.16) 0%, rgba(232,183,108,0) 70%);
+    z-index:-1;
+  }
+  #opener.hide{opacity:0;pointer-events:none;}
+  .opener-eyebrow{color:var(--cream-dim);font-size:15px;}
+  #heart-btn{background:none;border:none;cursor:pointer;padding:18px;}
+  .heart-glyph{
+    display:inline-block;font-size:clamp(52px,15vw,68px);color:var(--blush);
+    text-shadow:0 0 24px rgba(232,146,124,.65),0 0 48px rgba(232,146,124,.35);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+  .opener-hint{color:var(--cream-dim);font-size:14px;}
+
+  /* 正文 */
+  main#content{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:64px 26px 90px;opacity:0;transition:opacity 1s ease;}
+  main#content.show{opacity:1;}
+
+  .block{padding:34px 0;}
+  .block-greeting h1{
+    font-family:'Ma Shan Zheng',cursive;font-weight:400;
+    font-size:clamp(32px,9vw,44px);color:var(--gold-soft);margin-bottom:18px;line-height:1.3;
+  }
+  .block-greeting p{font-size:16px;line-height:2;}
+
+  .divider{text-align:center;color:var(--gold);opacity:.5;font-size:14px;letter-spacing:.3em;}
+
+  .block-lead{font-size:14px;color:var(--cream-dim);margin-bottom:14px;}
+  .block-sub{font-size:13px;color:var(--cream-dim);margin-top:14px;}
+
+  .block-counter{text-align:center;}
+  .counter-number{
+    font-family:'Ma Shan Zheng',cursive;font-size:clamp(56px,18vw,80px);
+    color:var(--gold-soft);text-shadow:0 0 30px rgba(232,183,108,.35);line-height:1;
+  }
+
+  .reason-text{
+    font-size:17px;line-height:1.9;min-height:92px;
+    padding:20px 22px;background:rgba(247,240,228,0.05);
+    border-left:2px solid var(--gold);border-radius:2px;
+    transition:opacity .35s ease;
+  }
+  .reason-text.fade{opacity:0;}
+
+  .btn{
+    margin-top:20px;padding:12px 26px;border-radius:999px;
+    border:1px solid var(--gold);background:transparent;color:var(--gold-soft);
+    font-family:'Noto Serif SC',serif;font-size:14px;cursor:pointer;
+    transition:background .3s ease,color .3s ease;
+  }
+  .btn:hover{background:var(--gold);color:var(--night-deep);}
+  .btn-ghost{border-color:var(--cream-dim);color:var(--cream-dim);}
+  .btn-ghost:hover{background:var(--cream-dim);color:var(--night-deep);}
+  button:focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px;}
+
+  .letter-text{font-size:16px;line-height:2.1;white-space:pre-wrap;}
+  .letter-text::after{
+    content:'';display:inline-block;width:2px;height:16px;background:var(--gold-soft);
+    margin-left:2px;vertical-align:middle;animation:blink 1s step-end infinite;
+  }
+  .letter-text.done::after{display:none;}
+  @keyframes blink{50%{opacity:0;}}
+
+  .block-finale{text-align:center;padding-top:46px;padding-bottom:50px;}
+  .finale-heart{
+    background:none;border:none;cursor:pointer;font-family:'Ma Shan Zheng',cursive;
+    font-size:clamp(44px,13vw,58px);color:var(--blush);
+    text-shadow:0 0 26px rgba(232,146,124,.5);animation:pulse 2.6s ease-in-out infinite;
+  }
+  .signature{margin-top:30px;font-size:14px;color:var(--cream-dim);font-style:italic;}
+
+  .particle{position:fixed;z-index:5;pointer-events:none;font-size:18px;color:var(--blush);animation:float-up 1.6s ease-out forwards;}
+  @keyframes float-up{0%{transform:translateY(0) scale(.8);opacity:1;}100%{transform:translateY(-120px) scale(1.1);opacity:0;}}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
+  }
+</style>
+</head>
+<body>
+  <div id="sky"></div>
+
+  <section id="opener">
+    <p class="opener-eyebrow">给亲爱的你</p>
+    <button id="heart-btn" aria-label="拆开惊喜"><span class="heart-glyph">♥</span></button>
+    <p class="opener-hint">轻轻点一下，拆开今天的惊喜</p>
+  </section>
+
+  <main id="content" hidden>
+    <section class="block block-greeting">
+      <h1>写给你</h1>
+      <p>今天没有什么特别的日子，只是突然很想让你知道——<br>你被爱着，而且是很多很多的那种。</p>
+    </section>
+
+    <p class="divider">✦</p>
+
+    <section class="block block-counter">
+      <p class="block-lead">我数了数日子</p>
+      <p class="counter-number" id="counter">0</p>
+      <p class="block-sub">是我们在一起，第几天了</p>
+    </section>
+
+    <p class="divider">✦</p>
+
+    <section class="block block-reasons">
+      <p class="block-lead">爱你的理由，今天说这一个</p>
+      <p class="reason-text" id="reason-text"></p>
+      <button id="reason-btn" class="btn">再给我一个理由</button>
+    </section>
+
+    <p class="divider">✦</p>
+
+    <section class="block block-letter">
+      <p class="block-lead">还想给你写封短信</p>
+      <p class="letter-text" id="letter-text"></p>
+    </section>
+
+    <p class="divider">✦</p>
+
+    <section class="block block-finale">
+      <button id="finale-btn" class="finale-heart" aria-label="点一下">我爱你</button>
+      <p class="block-sub">点一下，让星星知道</p>
+      <p class="signature">—— 想把这些说给你听的我</p>
+      <button id="replay-btn" class="btn btn-ghost">再看一遍</button>
+    </section>
+  </main>
+
+  <script>
+    // ============ 可自定义区域：改这里就行 ============
+    const START_DATE = '2023-08-15'; // TODO：改成你们在一起的第一天，格式 YYYY-MM-DD
+    const REASONS = [
+      '因为你笑起来的时候，眼睛里像装了星星。',
+      '因为你总是记得我随口说过的小事。',
+      '因为跟你在一起的时候，连普通的一天都变得值得期待。',
+      '因为你会认真听我说那些不太重要的废话。',
+      '因为你比我更相信我自己。',
+      '因为你难过的时候会假装没事，而我总能看穿。',
+      '因为有你在的地方，就是我最想待的地方。',
+      '因为你的坏脾气我也很喜欢。',
+      '因为无论多晚，你的消息总能让我笑出声。',
+      '因为爱你这件事，我从来没觉得累过。'
+    ];
+    const LETTER = `其实我不太擅长把感情说清楚，很多话到嘴边又咽回去。
+但今天想试着说一次——
+
+谢谢你出现在我的生活里，把很多普通的日子，变成了我会想反复回忆的日子。
+
+以后的日子，也想继续和你一起，慢慢过。`;
+    // ============ 自定义区域结束 ============
+
+    // 星空 + 萤火虫
+    const sky = document.getElementById('sky');
+    for(let i=0;i<70;i++){
+      const s=document.createElement('div');
+      s.className='star';
+      const size=(Math.random()*2+1).toFixed(1);
+      s.style.width=size+'px';
+      s.style.height=size+'px';
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      s.style.animationDelay=(Math.random()*3.6)+'s';
+      sky.appendChild(s);
+    }
+    for(let i=0;i<8;i++){
+      const f=document.createElement('div');
+      f.className='firefly';
+      f.style.left=Math.random()*100+'%';
+      f.style.animationDuration=(8+Math.random()*6)+'s';
+      f.style.animationDelay=(Math.random()*10)+'s';
+      sky.appendChild(f);
+    }
+
+    // 拆开惊喜
+    const opener=document.getElementById('opener');
+    const content=document.getElementById('content');
+    document.getElementById('heart-btn').addEventListener('click',()=>{
+      opener.classList.add('hide');
+      content.hidden=false;
+      requestAnimationFrame(()=>content.classList.add('show'));
+      setTimeout(()=>{opener.style.display='none';},850);
+    });
+
+    // 在一起第几天：滚动到这一块时才开始跳数字
+    function runCounter(){
+      const start=new Date(START_DATE);
+      const today=new Date();
+      const days=Math.max(0,Math.floor((today-start)/86400000));
+      const el=document.getElementById('counter');
+      let cur=0;
+      const step=Math.max(1,Math.floor(days/60));
+      const timer=setInterval(()=>{
+        cur+=step;
+        if(cur>=days){cur=days;clearInterval(timer);}
+        el.textContent=cur;
+      },20);
+    }
+
+    // 爱的理由：随机不重复
+    let lastIndex=-1;
+    function pickReason(){
+      let idx;
+      do{idx=Math.floor(Math.random()*REASONS.length);}while(idx===lastIndex && REASONS.length>1);
+      lastIndex=idx;
+      return REASONS[idx];
+    }
+    document.getElementById('reason-text').textContent=pickReason();
+    document.getElementById('reason-btn').addEventListener('click',()=>{
+      const textEl=document.getElementById('reason-text');
+      textEl.classList.add('fade');
+      setTimeout(()=>{
+        textEl.textContent=pickReason();
+        textEl.classList.remove('fade');
+      },350);
+    });
+
+    // 打字机信件：滚动到这一块时才开始打字
+    function runTypewriter(){
+      const el=document.getElementById('letter-text');
+      let i=0;
+      (function tick(){
+        if(i<=LETTER.length){
+          el.textContent=LETTER.slice(0,i);
+          i++;
+          setTimeout(tick,32);
+        }else{
+          el.classList.add('done');
+        }
+      })();
+    }
+
+    // 滚动触发（只负责启动数字和打字机，不做多余的进场动画）
+    const counterBlock=document.querySelector('.block-counter');
+    const letterBlock=document.querySelector('.block-letter');
+    const io=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(!e.isIntersecting) return;
+        if(e.target===counterBlock){runCounter();io.unobserve(counterBlock);}
+        if(e.target===letterBlock){runTypewriter();io.unobserve(letterBlock);}
+      });
+    },{threshold:0.5});
+    io.observe(counterBlock);
+    io.observe(letterBlock);
+
+    // 结尾：点一下冒出星星爱心
+    document.getElementById('finale-btn').addEventListener('click',(e)=>{
+      for(let i=0;i<10;i++){
+        const p=document.createElement('div');
+        p.className='particle';
+        p.textContent=Math.random()>0.5?'♥':'✦';
+        p.style.left=(e.clientX+(Math.random()*60-30))+'px';
+        p.style.top=(e.clientY+(Math.random()*20-10))+'px';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),1700);
+      }
+    });
+
+    document.getElementById('replay-btn').addEventListener('click',()=>{
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  </script>
+</body>
+</html>
