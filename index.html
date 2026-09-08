@@ -127,6 +127,75 @@
   .particle{position:fixed;z-index:5;pointer-events:none;font-size:18px;color:var(--blush);animation:float-up 1.6s ease-out forwards;}
   @keyframes float-up{0%{transform:translateY(0) scale(.8);opacity:1;}100%{transform:translateY(-120px) scale(1.1);opacity:0;}}
 
+  /* 藏在星星里的小盒子 */
+  .block-pocket-intro{text-align:center;}
+  .pocket-trigger{
+    background:none;border:none;cursor:pointer;padding:14px;color:var(--blush);
+    animation:pulse 2.4s ease-in-out infinite;
+    filter:drop-shadow(0 0 14px rgba(232,146,124,.5));
+  }
+  .bow-icon{width:52px;height:auto;}
+  .paw-icon{width:44px;height:auto;}
+
+  .pocket-box{
+    --p-text:#6B5648;--p-text-dim:#9C8579;--p-accent:#E8869F;--p-accent-2:#F2B6C6;
+    background:linear-gradient(160deg,#FFF6F0 0%,#FDEDF3 100%);
+    color:var(--p-text);border-radius:28px;padding:38px 22px 44px;margin:8px 0 10px;
+    position:relative;overflow:hidden;
+  }
+  .pocket-deco{position:absolute;opacity:.35;color:var(--p-accent);}
+  .pocket-deco-1{width:34px;top:18px;right:18px;}
+  .pocket-deco-2{width:28px;bottom:20px;left:16px;transform:rotate(-12deg);}
+  .pocket-inner{position:relative;z-index:1;}
+  .pocket-inner + .pocket-inner{margin-top:44px;padding-top:38px;border-top:1px dashed var(--p-accent-2);}
+  .pocket-heading{font-family:'Ma Shan Zheng',cursive;font-size:26px;color:var(--p-accent);margin-bottom:6px;}
+  .pocket-copy{font-size:14px;color:var(--p-text-dim);}
+
+  .memory-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px;}
+  .mcard{background:none;border:none;padding:0;cursor:pointer;display:block;width:100%;}
+  .mcard-frame{position:relative;width:100%;aspect-ratio:1;perspective:600px;}
+  .mcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.4,.2,.2,1);}
+  .mcard.flipped .mcard-inner,.mcard.matched .mcard-inner{transform:rotateY(180deg);}
+  .mcard-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;display:flex;align-items:center;justify-content:center;}
+  .mcard-back{background:var(--p-accent-2);}
+  .mcard-back svg{width:46%;fill:#fff;}
+  .mcard-front{background:#ffffff;transform:rotateY(180deg);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .mcard-front svg{width:52%;fill:var(--p-accent);}
+  .mcard.matched .mcard-front{background:#FFF3E2;box-shadow:0 0 0 2px var(--gold) inset;}
+  .mcard.matched .mcard-front svg{fill:var(--gold);}
+  .memory-status{margin-top:16px;font-size:13px;color:var(--p-text-dim);text-align:center;}
+
+  .dict-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:18px;}
+  .dict-card{
+    display:block;width:100%;text-align:left;background:#fff;border:none;border-radius:14px;
+    padding:16px 18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.05);
+  }
+  .dict-word{display:block;font-size:16px;font-weight:600;color:var(--p-text);}
+  .dict-word em{font-style:normal;font-size:12px;color:var(--p-text-dim);margin-left:6px;}
+  .dict-def{
+    display:block;font-size:14px;color:var(--p-text-dim);line-height:1.7;
+    max-height:0;opacity:0;overflow:hidden;transition:max-height .35s ease,opacity .35s ease,margin-top .35s ease;
+  }
+  .dict-card.open .dict-def{max-height:120px;opacity:1;margin-top:8px;}
+
+  .pocket-btn{
+    padding:11px 22px;border-radius:999px;border:1px solid var(--p-accent);
+    background:transparent;color:var(--p-accent);font-family:'Noto Serif SC',serif;
+    font-size:14px;cursor:pointer;transition:background .3s ease,color .3s ease;
+  }
+  .pocket-btn:hover{background:var(--p-accent);color:#fff;}
+  .pocket-btn-ghost{border-color:var(--p-text-dim);color:var(--p-text-dim);}
+  .pocket-btn-ghost:hover{background:var(--p-text-dim);color:#fff;}
+  .photo-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+  .photo-status{margin-top:10px;font-size:13px;color:var(--p-text-dim);min-height:18px;}
+  .photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
+  .photo-thumb{aspect-ratio:1;border-radius:12px;overflow:hidden;cursor:pointer;background:var(--p-accent-2);border:none;padding:0;}
+  .photo-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+  .photo-empty{font-size:13px;color:var(--p-text-dim);grid-column:1/-1;}
+
+  .photo-lightbox{position:fixed;inset:0;z-index:10;background:rgba(18,15,46,.92);display:flex;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;}
+  .photo-lightbox img{max-width:100%;max-height:100%;border-radius:8px;}
+
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;}
   }
@@ -172,6 +241,48 @@
 
     <p class="divider">✦</p>
 
+    <section class="block block-pocket-intro">
+      <p class="block-lead">写到这里，故事还没讲完</p>
+      <button id="pocket-btn" class="pocket-trigger" aria-label="打开小盒子">
+        <svg class="bow-icon" viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+          <path d="M28 20 L4 6 Q0 20 4 34 Z"/><path d="M32 20 L56 6 Q60 20 56 34 Z"/><circle cx="30" cy="20" r="6"/>
+        </svg>
+      </button>
+      <p class="opener-hint">星星之间，藏着一个只属于你的小盒子，点开看看</p>
+    </section>
+
+    <div id="pocket-box" class="pocket-box" hidden>
+      <svg class="pocket-deco pocket-deco-1" viewBox="0 0 60 40" fill="currentColor"><path d="M28 20 L4 6 Q0 20 4 34 Z"/><path d="M32 20 L56 6 Q60 20 56 34 Z"/><circle cx="30" cy="20" r="6"/></svg>
+      <svg class="pocket-deco pocket-deco-2" viewBox="0 0 60 60" fill="currentColor"><circle cx="30" cy="40" r="14"/><circle cx="12" cy="20" r="7"/><circle cx="30" cy="12" r="7.5"/><circle cx="48" cy="20" r="7"/></svg>
+
+      <div class="pocket-inner">
+        <p class="pocket-heading">配对小游戏</p>
+        <p class="pocket-copy">翻开卡片，找到藏起来的另一半。</p>
+        <div class="memory-grid" id="memory-grid"></div>
+        <p class="memory-status" id="memory-status">已配对 0 / 6</p>
+      </div>
+
+      <div class="pocket-inner">
+        <p class="pocket-heading">我们的专属词典</p>
+        <p class="pocket-copy">同一个单词，只是换了个更准确的解释。</p>
+        <div class="dict-grid" id="dict-grid"></div>
+      </div>
+
+      <div class="pocket-inner">
+        <p class="pocket-heading">照片墙</p>
+        <p class="pocket-copy">两个人都可以往上面加照片，随手一翻就是回忆。</p>
+        <div class="photo-actions">
+          <button type="button" id="photo-upload-btn" class="pocket-btn">上传一张照片</button>
+          <input type="file" accept="image/*" id="photo-input" hidden />
+          <button type="button" id="photo-shuffle" class="pocket-btn pocket-btn-ghost">随机排一次</button>
+        </div>
+        <p class="photo-status" id="photo-status"></p>
+        <div class="photo-grid" id="photo-grid"></div>
+      </div>
+    </div>
+
+    <p class="divider">✦</p>
+
     <section class="block block-finale">
       <button id="finale-btn" class="finale-heart" aria-label="点一下">我爱你</button>
       <p class="block-sub">点一下，让星星知道</p>
@@ -180,6 +291,12 @@
     </section>
   </main>
 
+  <div id="photo-lightbox" class="photo-lightbox" hidden>
+    <img id="photo-lightbox-img" src="" alt="照片" />
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script>
     // ============ 可自定义区域：改这里就行 ============
     const START_DATE = '2023-08-15'; // TODO：改成你们在一起的第一天，格式 YYYY-MM-DD
@@ -202,6 +319,147 @@
 
 以后的日子，也想继续和你一起，慢慢过。`;
     // ============ 自定义区域结束 ============
+
+    // ============ 可自定义区域2：专属词典内容，想换词随时改 ============
+    const DICTIONARY = [
+      {word:'home', pos:'n.', def:'不是一个地点，而是有你在的任何地方。'},
+      {word:'forever', pos:'n.', def:'从遇见你那天开始，重新计算的时间单位。'},
+      {word:'lucky', pos:'adj.', def:'形容正在读这段话的人。'},
+      {word:'favorite', pos:'adj.', def:'不用再比较了，答案一直是你。'},
+      {word:'warm', pos:'adj.', def:'冬天里你说"抱一下"时的温度。'},
+      {word:'simple', pos:'adj.', def:'只要有你在，什么事都变简单了。'}
+    ];
+    // ============ 自定义区域2结束 ============
+
+    // ============ 可自定义区域3：Firebase 配置，去 Firebase 控制台复制粘贴 ============
+    const firebaseConfig = {
+      apiKey: "在这里粘贴你的 apiKey",
+      authDomain: "在这里粘贴你的 authDomain",
+      projectId: "在这里粘贴你的 projectId",
+      storageBucket: "在这里粘贴你的 storageBucket",
+      messagingSenderId: "在这里粘贴你的 messagingSenderId",
+      appId: "在这里粘贴你的 appId"
+    };
+    // ============ 自定义区域3结束 ============
+
+    // 照片墙：用 Firestore 存照片，两边实时同步
+    let db=null, allPhotos=[], firebaseInited=false;
+    function initFirebase(){
+      if(firebaseInited) return;
+      firebaseInited=true;
+      const statusEl=document.getElementById('photo-status');
+      if(firebaseConfig.apiKey.includes('在这里')){
+        statusEl.textContent='还没连接云存储——按照说明填好配置就能用啦';
+        return;
+      }
+      try{
+        firebase.initializeApp(firebaseConfig);
+        db=firebase.firestore();
+        db.collection('photos').orderBy('ts','desc').onSnapshot(snap=>{
+          allPhotos=[];
+          snap.forEach(doc=>allPhotos.push(doc.data()));
+          renderPhotos();
+        },()=>{ statusEl.textContent='读取照片失败，稍后再试'; });
+      }catch(err){
+        statusEl.textContent='连接失败，检查一下配置是否填对';
+      }
+    }
+    function shufflePhotos(arr){
+      const a=[...arr];
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+    function renderPhotos(list){
+      const grid=document.getElementById('photo-grid');
+      grid.innerHTML='';
+      const items=list||allPhotos;
+      if(items.length===0){
+        grid.innerHTML='<p class="photo-empty">还没有照片，上传第一张吧</p>';
+        return;
+      }
+      items.forEach(p=>{
+        const btn=document.createElement('button');
+        btn.type='button';btn.className='photo-thumb';
+        btn.innerHTML=`<img src="${p.data}" alt="照片" loading="lazy" />`;
+        btn.addEventListener('click',()=>{
+          document.getElementById('photo-lightbox-img').src=p.data;
+          document.getElementById('photo-lightbox').hidden=false;
+        });
+        grid.appendChild(btn);
+      });
+    }
+    document.getElementById('photo-lightbox').addEventListener('click',()=>{
+      document.getElementById('photo-lightbox').hidden=true;
+    });
+    document.getElementById('photo-shuffle').addEventListener('click',()=>{
+      renderPhotos(shufflePhotos(allPhotos));
+    });
+    document.getElementById('photo-upload-btn').addEventListener('click',()=>{
+      document.getElementById('photo-input').click();
+    });
+    function compressImage(file, callback){
+      const reader=new FileReader();
+      reader.onload=(ev)=>{
+        const img=new Image();
+        img.onload=()=>{
+          let w=img.width,h=img.height;
+          const maxSide=1000;
+          if(w>h && w>maxSide){h=Math.round(h*maxSide/w);w=maxSide;}
+          else if(h>=w && h>maxSide){w=Math.round(w*maxSide/h);h=maxSide;}
+          const canvas=document.createElement('canvas');
+          canvas.width=w;canvas.height=h;
+          canvas.getContext('2d').drawImage(img,0,0,w,h);
+          let quality=0.72;
+          let out=canvas.toDataURL('image/jpeg',quality);
+          while(out.length>900000 && quality>0.35){
+            quality-=0.1;
+            out=canvas.toDataURL('image/jpeg',quality);
+          }
+          callback(out.length<=900000?out:null);
+        };
+        img.onerror=()=>callback(null);
+        img.src=ev.target.result;
+      };
+      reader.onerror=()=>callback(null);
+      reader.readAsDataURL(file);
+    }
+    document.getElementById('photo-input').addEventListener('change',(e)=>{
+      const file=e.target.files[0];
+      const statusEl=document.getElementById('photo-status');
+      if(!file) return;
+      if(!db){
+        statusEl.textContent='还没连接云存储，先按说明设置好';
+        e.target.value='';
+        return;
+      }
+      statusEl.textContent='上传中…';
+      compressImage(file,(dataUrl)=>{
+        if(!dataUrl){
+          statusEl.textContent='这张图片有点大，换一张试试';
+          return;
+        }
+        db.collection('photos').add({data:dataUrl, ts:Date.now()})
+          .then(()=>{statusEl.textContent='上传成功！';})
+          .catch(()=>{statusEl.textContent='上传失败，检查一下网络或配置';});
+      });
+      e.target.value='';
+    });
+
+    // 配对游戏用的小图标
+    function petIcon(type){
+      const paths={
+        bow:'<path d="M28 20 L4 6 Q0 20 4 34 Z"/><path d="M32 20 L56 6 Q60 20 56 34 Z"/><circle cx="30" cy="20" r="6"/>',
+        paw:'<circle cx="30" cy="40" r="14"/><circle cx="12" cy="20" r="7"/><circle cx="30" cy="12" r="7.5"/><circle cx="48" cy="20" r="7"/>',
+        heart:'<path d="M30 50 C10 35 4 20 14 12 C22 6 30 12 30 18 C30 12 38 6 46 12 C56 20 50 35 30 50 Z"/>',
+        star:'<path d="M30 4 L36 22 L56 22 L40 34 L46 54 L30 42 L14 54 L20 34 L4 22 L24 22 Z"/>',
+        flower:'<circle cx="30" cy="14" r="10"/><circle cx="30" cy="46" r="10"/><circle cx="14" cy="30" r="10"/><circle cx="46" cy="30" r="10"/>',
+        cloud:'<ellipse cx="30" cy="38" rx="26" ry="14"/><circle cx="16" cy="26" r="12"/><circle cx="34" cy="20" r="15"/><circle cx="48" cy="28" r="11"/>'
+      };
+      return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">${paths[type]}</svg>`;
+    }
 
     // 星空 + 萤火虫
     const sky = document.getElementById('sky');
@@ -296,17 +554,97 @@
     io.observe(counterBlock);
     io.observe(letterBlock);
 
-    // 结尾：点一下冒出星星爱心
-    document.getElementById('finale-btn').addEventListener('click',(e)=>{
-      for(let i=0;i<10;i++){
+    // 冒出星星爱心的小动画（结尾按钮和游戏胜利时都会用到）
+    function burstParticles(x,y,count){
+      for(let i=0;i<count;i++){
         const p=document.createElement('div');
         p.className='particle';
         p.textContent=Math.random()>0.5?'♥':'✦';
-        p.style.left=(e.clientX+(Math.random()*60-30))+'px';
-        p.style.top=(e.clientY+(Math.random()*20-10))+'px';
+        p.style.left=(x+(Math.random()*60-30))+'px';
+        p.style.top=(y+(Math.random()*20-10))+'px';
         document.body.appendChild(p);
         setTimeout(()=>p.remove(),1700);
       }
+    }
+
+    // 配对小游戏
+    const PET_TYPES=['bow','paw','heart','star','flower','cloud'];
+    let flippedCards=[],matchedCount=0,memLock=false,memoryBuilt=false;
+    function buildMemoryGame(){
+      if(memoryBuilt) return;
+      memoryBuilt=true;
+      const deck=[...PET_TYPES,...PET_TYPES];
+      for(let i=deck.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [deck[i],deck[j]]=[deck[j],deck[i]];
+      }
+      const grid=document.getElementById('memory-grid');
+      deck.forEach(type=>{
+        const card=document.createElement('button');
+        card.className='mcard';card.type='button';card.dataset.type=type;
+        card.innerHTML=`<span class="mcard-frame"><span class="mcard-inner">
+          <span class="mcard-face mcard-back">${petIcon('bow')}</span>
+          <span class="mcard-face mcard-front">${petIcon(type)}</span>
+        </span></span>`;
+        card.addEventListener('click',()=>flipCard(card));
+        grid.appendChild(card);
+      });
+    }
+    function flipCard(card){
+      if(memLock||card.classList.contains('flipped')||card.classList.contains('matched')) return;
+      card.classList.add('flipped');
+      flippedCards.push(card);
+      if(flippedCards.length===2){
+        memLock=true;
+        const [a,b]=flippedCards;
+        if(a.dataset.type===b.dataset.type){
+          a.classList.add('matched');b.classList.add('matched');
+          matchedCount++;
+          document.getElementById('memory-status').textContent=`已配对 ${matchedCount} / ${PET_TYPES.length}`;
+          flippedCards=[];memLock=false;
+          if(matchedCount===PET_TYPES.length){
+            setTimeout(()=>{
+              document.getElementById('memory-status').textContent='全部配对成功，你超棒的！';
+              const r=document.getElementById('memory-grid').getBoundingClientRect();
+              burstParticles(r.left+r.width/2, r.top+r.height/2, 14);
+            },400);
+          }
+        }else{
+          setTimeout(()=>{
+            a.classList.remove('flipped');b.classList.remove('flipped');
+            flippedCards=[];memLock=false;
+          },800);
+        }
+      }
+    }
+
+    // 专属词典
+    let dictBuilt=false;
+    function buildDictionary(){
+      if(dictBuilt) return;
+      dictBuilt=true;
+      const grid=document.getElementById('dict-grid');
+      DICTIONARY.forEach(entry=>{
+        const card=document.createElement('button');
+        card.className='dict-card';card.type='button';
+        card.innerHTML=`<span class="dict-word">${entry.word}<em>${entry.pos}</em></span><span class="dict-def">${entry.def}</span>`;
+        card.addEventListener('click',()=>card.classList.toggle('open'));
+        grid.appendChild(card);
+      });
+    }
+
+    // 打开藏在星星里的小盒子
+    document.getElementById('pocket-btn').addEventListener('click',()=>{
+      document.querySelector('.block-pocket-intro').style.display='none';
+      document.getElementById('pocket-box').hidden=false;
+      buildMemoryGame();
+      buildDictionary();
+      initFirebase();
+    });
+
+    // 结尾：点一下冒出星星爱心
+    document.getElementById('finale-btn').addEventListener('click',(e)=>{
+      burstParticles(e.clientX, e.clientY, 10);
     });
 
     document.getElementById('replay-btn').addEventListener('click',()=>{
